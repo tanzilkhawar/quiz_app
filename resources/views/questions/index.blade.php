@@ -16,7 +16,7 @@
         @endforeach
         <div id="error-message" class="text-danger"></div>
 
-        <a href="#" id='next-button' class="btn btn-danger">skip</a>
+        <a href="#" id='skip-button' class="btn btn-danger">skip</a>
         <a href="#" class="btn btn-success" id="next-button">next</a>
     </form>
 @endsection

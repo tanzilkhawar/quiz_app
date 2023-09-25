@@ -13,11 +13,8 @@ class QuestionController extends Controller
 {
     public function index()
     {
-        $results = Result::where('user_id', 2)
-            ->groupBy('question_id')
-            ->selectRaw('question_id, COUNT(*) as count')
-            ->get();
-        if(count($results) < 10){
+        $allAnsweredQuestions = Result::where('user_id', session("user_id"))->get();
+        if(count($allAnsweredQuestions) < 10){
             // Retrieve the first question from the database saveAnswer
             $question = Question::inRandomOrder()->first();
 
@@ -30,7 +27,28 @@ class QuestionController extends Controller
                 return view('questions.no-questions');
             }
         }else{
-            return view('questions.results');
+            $correctAnswersCount = Result::where('user_id', session("user_id"))
+                ->join('answers', function ($join) {
+                    $join->on('results.question_id', '=', 'answers.question_id')
+                        ->on('results.answer_id', '=', 'answers.id');
+                })
+                ->where('answers.is_correct', true) // Assuming there's a column 'is_correct' to indicate correct answers
+                ->count();
+
+            $skippedAnswerCount = Result::where('user_id', session("user_id"))
+                ->whereNull('answer_id')
+                ->count();
+            $allAnsweredQuestions = count($allAnsweredQuestions);
+            $wrongAnsweredQuestions = $allAnsweredQuestions - $skippedAnswerCount - $correctAnswersCount;
+            $user = User::where("id", session('user_id'))->first();
+            return view('questions.results', compact(
+                'correctAnswersCount',
+                'skippedAnswerCount',
+                        'allAnsweredQuestions',
+                        'wrongAnsweredQuestions',
+                        'user'
+                )
+            );
 
         }
 
@@ -44,6 +62,7 @@ class QuestionController extends Controller
             'question_id' => $request->question_id,
             'user_id' => session("user_id"),
         ]);
+
         $result->save();
 
         if($result){

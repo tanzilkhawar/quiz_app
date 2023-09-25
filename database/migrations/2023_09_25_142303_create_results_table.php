@@ -46,7 +46,7 @@ return new class extends Migration
             $table->dropColumn('question_id');
             // Remove the foreign key constraint and the column
             $table->dropForeign(['answer_id']);
-            $table->dropColumn('answer_id');
+            $table->dropColumn('answer_id')->nullable();
             // Remove the foreign key constraint and the column
             $table->dropForeign(['user_id']);
             $table->dropColumn('user_id');

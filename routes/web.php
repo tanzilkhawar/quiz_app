@@ -12,12 +12,9 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
-// routes/web.php
 
-Route::get('/enter-name', 'App\Http\Controllers\UserController@showEnterNameForm')->name('enter-name');
+
+Route::get('/', 'App\Http\Controllers\UserController@showEnterNameForm');
 // routes/web.php
 
 Route::post('/save-name', 'App\Http\Controllers\UserController@saveName')->name('save-name');

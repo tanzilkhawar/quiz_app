@@ -33,14 +33,8 @@
     $(document).ready(function() {
         $(document).on("click","#next-button",function(e) {
             $('#error-message').text('');
-
-            e.preventDefault(); // Prevent the default form submission
-            console.log("ues");
-            console.log("uesi");
-
+            e.preventDefault();
             var selectedAnswer = $('input[name="answer_id"]:checked').val();
-
-            console.log(selectedAnswer);
             if (selectedAnswer) {
                 // Serialize the form data to JSON
                 var formData = $('#answer-form').serializeArray();
@@ -68,6 +62,32 @@
                 // Display a validation error message
                 $('#error-message').text('Please select an answer.');
             }
+        });
+        $(document).on("click","#skip-button",function(e) {
+            $('#error-message').text('');
+            e.preventDefault();
+            // Serialize the form data to JSON
+            var formData = $('#answer-form').serializeArray();
+            var jsonData = {};
+            $.each(formData, function () {
+                jsonData[this.name] = this.value;
+            });
+            $.ajax({
+                type: 'POST',
+                url: '{{ route('submit-answer') }}', // Replace with your route
+                data: $('#answer-form').serialize(), // Serialize the form data
+                success: function(response) {
+                    console.log(response);
+                    if(response.success){
+                        window.location.reload();
+                    }
+
+                },
+                error: function(xhr, textStatus, errorThrown) {
+                    // Handle errors here, such as displaying an error message
+                    console.log('Error:', textStatus, errorThrown);
+                }
+            });
         });
 
     });

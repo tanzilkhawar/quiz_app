@@ -1,10 +1,6 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Enter Your Name</title>
-</head>
-<body>
-<div class="container">
+@extends('app')
+
+@section('content')
     <h1>Enter Your Name</h1>
     <form method="POST" action="{{ route('save-name') }}">
         @csrf
@@ -14,6 +10,4 @@
         </div>
         <button type="submit" class="btn btn-primary">Save</button>
     </form>
-</div>
-</body>
-</html>
+@endsection
